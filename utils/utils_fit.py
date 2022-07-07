@@ -84,7 +84,7 @@ def fit_one_epoch(model_train, model, loss_history, eval_callback, optimizer, ep
                     #-------------------------------#
                     #   计算f_score
                     #-------------------------------#
-                    _f_score,_pr, _recall = f_score(outputs, labels)
+                    _f_score, _pr, _recall = f_score(outputs, labels)
 
             #----------------------#
             #   反向传播
@@ -143,7 +143,7 @@ def fit_one_epoch(model_train, model, loss_history, eval_callback, optimizer, ep
             #-------------------------------#
             #   计算f_score
             #-------------------------------#
-            _f_score    = f_score(outputs, labels)
+            _f_score,_pr, _recall    = f_score(outputs, labels)
 
             val_loss    += loss.item()
             val_f_score += _f_score.item()

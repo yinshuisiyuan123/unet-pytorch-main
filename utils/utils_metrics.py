@@ -35,7 +35,7 @@ def f_score(inputs, target, beta=1, smooth = 1e-5, threhold = 0.5):
     recall = torch.mean(recall)
     #
     score = torch.mean(score)
-    return score,pr,recall
+    return score, pr, recall
 
 # 设标签宽W，长H
 def fast_hist(a, b, n):
