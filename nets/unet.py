@@ -103,6 +103,3 @@ class Unet(nn.Module):
         elif self.backbone == "mobilenet":
             for param in self.mobilenet.parameters():
                 param.requires_grad = True
-net = Unet(num_classes = 21, pretrained = False, backbone = 'mobilenet')
-from torchinfo import summary
-summary(net, input_size=(1, 3, 224, 224))

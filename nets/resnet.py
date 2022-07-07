@@ -183,6 +183,3 @@ def resnet50(pretrained=False, **kwargs):
     del model.avgpool
     del model.fc
     return model
-net = resnet50
-from torchinfo import summary
-summary(net(),input_size=(1, 3, 224, 224))
