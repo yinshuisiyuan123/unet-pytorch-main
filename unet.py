@@ -26,15 +26,15 @@ class Unet(object):
         #   训练好后logs文件夹下存在多个权值文件，选择验证集损失较低的即可。
         #   验证集损失较低不代表miou较高，仅代表该权值在验证集上泛化性能较好。
         #-------------------------------------------------------------------#
-        "model_path"    : r'D:\detection\crack\unet-pytorch-main\logs\best_epoch_weights.pth',
+        "model_path"    : r'D:\detection\crack\unet-pytorch-main\mobilenetweight\best_epoch_weights.pth',
         #--------------------------------#
         #   所需要区分的类的个数+1
         #--------------------------------#
         "num_classes"   : 2,
         #--------------------------------#
-        #   所使用的的主干网络：vgg、resnet50   
+        #   所使用的的主干网络：vgg、resnet50、mobilenet
         #--------------------------------#
-        "backbone"      : "resnet50",
+        "backbone"      : "mobilenet",
         #--------------------------------#
         #   输入图片的大小
         #--------------------------------#

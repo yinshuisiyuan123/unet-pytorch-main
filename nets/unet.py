@@ -1,10 +1,9 @@
 import torch
 import torch.nn as nn
-
 from nets.resnet import resnet50
 from nets.vgg import VGG16
 from nets.mobilenetv3 import mobilenet
-
+from nets.uunet import unet121
 class unetUp(nn.Module):
     def __init__(self, in_size, out_size):
         super(unetUp, self).__init__()
@@ -33,6 +32,9 @@ class Unet(nn.Module):
         elif backbone == "mobilenet":
             self.mobilenet = mobilenet(pretrained=pretrained)
             in_filters = [144, 280, 552, 272]
+        elif backbone == "unet121":
+            self.unet121 = unet121(pretrained=pretrained)
+            in_filters = [192, 384, 768, 1024]
         else:
             raise ValueError('Unsupported backbone - `{}`, Use vgg, resnet50.'.format(backbone))
         out_filters = [64, 128, 256, 512]
@@ -49,7 +51,7 @@ class Unet(nn.Module):
 
         if backbone == 'resnet50'or "mobilenet":
             self.up_conv = nn.Sequential(
-                nn.UpsamplingBilinear2d(scale_factor = 2), 
+                nn.UpsamplingBilinear2d(scale_factor = 2),
                 nn.Conv2d(out_filters[0], out_filters[0], kernel_size = 3, padding = 1),
                 nn.ReLU(),
                 nn.Conv2d(out_filters[0], out_filters[0], kernel_size = 3, padding = 1),
@@ -69,7 +71,8 @@ class Unet(nn.Module):
             [feat1, feat2, feat3, feat4, feat5] = self.resnet.forward(inputs)
         elif self.backbone == "mobilenet":
             [feat1, feat2, feat3, feat4, feat5] = self.mobilenet.forward(inputs)
-
+        elif self.backbone == "unet121":
+            [feat1, feat2, feat3, feat4, feat5] = self.unet121.forward(inputs)
         up4 = self.up_concat4(feat4, feat5)
         up3 = self.up_concat3(feat3, up4)
         up2 = self.up_concat2(feat2, up3)
@@ -79,7 +82,7 @@ class Unet(nn.Module):
             up1 = self.up_conv(up1)
 
         final = self.final(up1)
-        
+
         return final
 
     def freeze_backbone(self):
@@ -92,6 +95,9 @@ class Unet(nn.Module):
         elif self.backbone == "mobilenet":
             for param in self.mobilenet.parameters():
                 param.requires_grad = False
+        elif self.backbone == "unet121":
+            for param in self.unet121.parameters():
+                param.requires_grad = False
 
     def unfreeze_backbone(self):
         if self.backbone == "vgg":
@@ -103,3 +109,9 @@ class Unet(nn.Module):
         elif self.backbone == "mobilenet":
             for param in self.mobilenet.parameters():
                 param.requires_grad = True
+        elif self.backbone == "unet121":
+            for param in self.unet121.parameters():
+                param.requires_grad = True
+# from torchinfo import summary
+# net = Unet(num_classes=2, pretrained=False,backbone="mobilenet")
+# summary(net, input_size=(1, 3, 224, 224))
